@@ -50,6 +50,19 @@ const userSchema=new mongoose.Schema({
   verificationOTP: String,
   verificationExpires:Date,
   resetPasswordOTPExpires: Date,
+  isVerified:{
+  type:Boolean,
+  default:false
+},
+
+verificationOTP: String,
+
+verificationOTPExpires: Date,
+
+resetPasswordOTP: String,
+
+resetPasswordOTPExpires: Date,
+
 
 },{timestamps: true});
 export default mongoose.model("User",userSchema);
