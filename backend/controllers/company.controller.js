@@ -25,23 +25,49 @@ export const addCompany = async (req, res) => {
       });
     }
     let logoUrl = "";
-    if (req.file) {
-      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-        folder: "company_logos",
-      });
-      logoUrl = uploadResult.secure_url;
+    if(req.file) {
+      const uploadResult=await uploadToCloudinary(
+        req.file.buffer,
+        "jobportal/logo",
+        "image",
+        req.file.originalname
+      );
+      logoUrl=uploadResult.secure_url;
     }
-    const newCompany = new Company({
+    const company = await Company.create({
       logo: logoUrl,
       website,
       createdBy: req.user.id
     });
-    await newCompany.save();
     res.status(201).json({
       success: true,
-      company: newCompany
+      message: "Company added successfully",
+      company: company
     });
   } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+//delete a company(admin only)
+export const deleteCompany = async (req, res) => {
+  try {
+    const company = await Company.findById(req.params.id);
+    if (!company) {
+      return res.status(404).json({
+        success: false,
+        message: "Company not found",
+      });
+    }
+    await company.deleteOne();
+    res.status(200).json({
+      success: true,
+      message: "Company deleted successfully",
+    });
+  }
+  catch (error) {
     res.status(500).json({
       success: false,
       message: error.message
