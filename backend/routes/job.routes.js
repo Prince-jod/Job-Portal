@@ -1,7 +1,7 @@
 import express from 'express';
-import {authMiddleware, authorize} from '../middleware/authMiddleware.js';
-import {upload} from '../middleware/uploadMiddleware.js';
-import {closeJob, createJob, deleteJob, getAllJobs, getDashboardStats, getJobById, getJobsByAdmin, updateJob} from '../controllers/jobController.js';
+import {authMiddleware, authorize} from '../middlewares/authMiddleware.js';
+import {upload} from '../middlewares/uploadMiddleware.js';
+import {closeJob, createJob, deleteJob, getAllJobs, getDashboardStats, getJobById, getJobsByAdmin, updateJob} from '../controllers/job.controller.js';
 
 const jobRouter = express.Router();
 
