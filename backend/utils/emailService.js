@@ -25,7 +25,7 @@ body: JSON.stringify({
 }),
   });
   const result=await response.json();
-  if(!response.ok) throw new Error(Result.message) || "Brevo API error";
+  if(!response.ok) throw new Error(result.message) || "Brevo API error";
 }
 catch(err){
   console.error(`Email Error [${subject}]:`,error.message);
