@@ -1,7 +1,14 @@
-import React from "react";
+import React ,{
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { navbarStyles as s } from "../assets/dummyStyles";
 import {useLocation , useNavigate} from "../assets/dummyStyles";
 import {Home,List , Building, Briefcase,UserCheck} from 'lucide-react';
+import logoFallback from '../assets/logo.png';
 
 const NAV_ITEMS = [
   { key: "dashboard", label: "Dashboard", Icon: Home },
@@ -123,6 +130,21 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [updateIndicator]);
+  const handleNavigate=(key)=>{
+    const path=ROUTES[key] ?? "/";
+    setActive(key);
+    onNavigate?.(key);
+    setMobileMenuOpen(false);
+    setOpenDropdownKey(null);
+  };
+  //to logout
+  const handleLoout=()=>{
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
+    setMobileMenuOpen(false);
+  }
+  const logoToUse=logoSrc ?? logoFallback;
 
 
   return (
