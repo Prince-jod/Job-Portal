@@ -12,7 +12,7 @@ const userSchema=new mongoose.Schema({
   },
   password:{
     type:String,
-    required:true
+    required:[true,"password must be 6 char long"]
   },
   phone:{
     type:String,
