@@ -89,7 +89,40 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
     return () => document.removeEventListener("mousedown", handleDocClick);
   }, [isLGOnly]);
 
+ useEffect(()=>{
+  const key =pathToKey(location.pathname);
+  setActive(key);
+  setMobileMenuOpen(false);
+ },[location.pathname]);
 
+  const updateIndicator = useCallback(() => {
+    const container = navContainerRef.current;
+    const activeEl = itemRefs.current[active];
+    if (!container || !activeEl) {
+      setIndicatorStyle({ left: 0, width: 0 });
+      return;
+    }
+    const containerRect = container.getBoundingClientRect();
+    const activeRect = activeEl.getBoundingClientRect();
+    setIndicatorStyle({
+      left: activeRect.left - containerRect.left,
+      width: activeRect.width,
+    });
+  }, [active]);
+
+  useLayoutEffect(() => {
+    updateIndicator();
+    let rafId = null;
+    const handleResize = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateIndicator);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [updateIndicator]);
 
 
   return (
