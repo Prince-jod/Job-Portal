@@ -1,7 +1,20 @@
 import React from "react";
 import { navbarStyles as s } from "../assets/dummyStyles";
 
-const Navbar = () => {
+const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
+ 
+  const navigate=useNavigate();
+  const location=useLocation();
+  const [user,serUser]=useState(null);
+  useEffect(()=>{
+    const storedUser=localStorage.getItem("user");
+    setUser(storedUser ? JSON.parse(storedUser):null);
+  },[location.pathname]);
+  const pathToKey=(pathname)=>{
+    const found=Object.entries(ROUTES)
+  }
+
+
   return (
     <header className={s.header}>
       <nav className={s.nav}>
