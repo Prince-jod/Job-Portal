@@ -1072,7 +1072,8 @@ export const navbarStyles = {
   logoSubtitle: "text-xs text-gray-400  min-[1407px]:block",
 
   // Desktop Navigation
-  desktopNav: "hidden min-[1407px]:flex min-[1407px]:flex-1 min-[1407px]:justify-center",
+  desktopNav:
+"hidden lg:flex lg:flex-1 lg:justify-center",
   navIndicatorContainer: "relative",
   activeIndicator:
     "absolute -bottom-2 h-1 rounded-full bg-linear-to-r from-indigo-300 to-pink-300 transition-all duration-300 ease-out",
