@@ -17,7 +17,7 @@ const NAV_ITEMS = [
   { key: "company", label: "Companies", Icon: Building },
   {
     key: "companyQuestions",
-    label: "Company Question",
+    label: "Company Questions",
     Icon: Building,
     dropdown: [{ key: "listCompanyQ", label: "List Company Questions" }],
   },
