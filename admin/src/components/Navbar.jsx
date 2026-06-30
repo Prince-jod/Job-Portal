@@ -209,10 +209,10 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                         closeNavDropdownDelayed(200)
                       }
                       >
-                        <div ref={(e)=>{
+                        <div ref={(el)=>{
                           itemRefs.current[item.key]=el;
                           if(item.dropdown && el && isLGOnly) {
-                            e.preventDefault();setOpenDropdownKey((prev)=>
+                            el.preventDefault();setOpenDropdownKey((prev)=>
                             prev===item.key ? null : item.key,)
                             return;
                           }
