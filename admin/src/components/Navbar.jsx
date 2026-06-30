@@ -179,7 +179,7 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
             <div className={s.desktopNav}>
              <div ref={navContainerRef} className={s.navIndicatorCotainer}>
               {active && indicatorStyle.width > 0 && (
-                <div className={activeIndicator} style={{
+                <div className={s.activeIndicator} style={{
                   left: indicatorStyle.left,
                   width: indicatorStyle.width,
                   boxShadow : "0 0 8px rgba(165,180,252,0.5)",
