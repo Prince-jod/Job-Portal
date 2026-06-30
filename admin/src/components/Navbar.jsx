@@ -132,6 +132,7 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
   }, [updateIndicator]);
   const handleNavigate=(key)=>{
     const path=ROUTES[key] ?? "/";
+    navigate(path);
     setActive(key);
     onNavigate?.(key);
     setMobileMenuOpen(false);
