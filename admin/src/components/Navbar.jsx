@@ -203,7 +203,21 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                         isLGOnly &&
                         openNavDropdown(item.key)
                       }
-                      ></li>
+                      onMouseLeave={()=>
+                        item.dropdown && 
+                        isLGOnly &&
+                        closeNavDropdownDelayed(200)
+                      }
+                      >
+                        <div ref={(el)=>{
+                          itemRefs.current[item.key]=el;
+                          if(item.dropdown && el && isLGOnly) {
+                            
+                          }
+                        }}>
+
+                        </div>
+                      </li>
                       </React.Fragment>
                      )
 
