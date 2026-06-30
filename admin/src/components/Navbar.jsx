@@ -45,7 +45,7 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
  
   const navigate=useNavigate();
   const location=useLocation();
-  const [user,serUser]=useState(null);
+  const [user,setUser]=useState(null);
   useEffect(()=>{
     const storedUser=localStorage.getItem("user");
     setUser(storedUser ? JSON.parse(storedUser):null);
