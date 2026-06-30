@@ -212,23 +212,36 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                         <div ref={(el)=>{
                           itemRefs.current[item.key]=el;
                           if(item.dropdown && el && isLGOnly) {
-                            el.preventDefault();setOpenDropdownKey((prev)=>
-                            prev===item.key ? null : item.key,)
+                            item.dropdown.forEach((sub)=>{
+                              itemRefs.current[sub.key]=el;
+                            }); 
+                          }
+                        }} className={s.NavItemWrapper}
+                        >
+                        <button onClick={(e)=>{
+                          if(item.dropdown && isLGOnly){
+                            e.preventDefault();setOpenDropdownKey((prev)=>
+                              prev===item.key ? null : item.key,
+                            )
                             return;
                           }
-                          handleNavigate(item.key);
+                          hadleNavigate(item.key);
                         }}
                         className={`${s.navButton} ${
-                          isActiveParent ? s.navButtonActive : s.navButtonInactive
-                        }`}>
-<Icon className={s.navButtonIcon}/>
-<span className={s.navButtonText}>
-  {item.label}
-</span>
+                          isActiveParent
+                          ? s.navButtonActive
+                          :s.navButtonInactive
+                        }`}
+                        >
+                          <Icon className={s.navButtonIcon}/>
+                          <span className={s.navButtonText}>
+                           {item.label}
+                          </span>
+                        </button>
                         </div>
                       </li>
                       </React.Fragment>
-                     )
+                     );
 
                   
                 })}
