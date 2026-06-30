@@ -176,7 +176,43 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                 <span className={s.logoSubtitle}>you will not get Job from here</span>
               </div>
             </div>
+            <div className={s.desktopNav}>
+             <div ref={navContainerRef} className={s.navIndicatorCotainer}>
+              {active && indicatorStyle.width > 0 && (
+                <div className={activeIndicator} style={{
+                  left: indicatorStyle.left,
+                  width: indicatorStyle.width,
+                  boxShadow : "0 0 8px rgba(165,180,252,0.5)",
+                }}
+                />
+              )}
+              <ul className={s.navList}>
+                {NAV_ITEMS.map((item)=>{
+                  const  Icon =item.Icon;
 
+                  const isActiveParent=
+                  active===item.key ||
+                  (item.dropdown &&
+                     isLGOnly &&
+                     item.dropdown.some((sub)=>active ===sub.key));
+                     return (
+                      <React.Fragment key={item.key}>
+                      <li className={s.navItem}
+                      onMouseEnter={()=>
+                        item.dropdown &&
+                        isLGOnly &&
+                        openNavDropdown(item.key)
+                      }
+                      ></li>
+                      </React.Fragment>
+                     )
+
+                  
+                })}
+
+              </ul>
+             </div>
+            </div>
           </div>
         </div> 
       </nav>
