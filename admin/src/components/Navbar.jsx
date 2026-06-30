@@ -6,7 +6,7 @@ import React ,{
   useState,
 } from "react";
 import { navbarStyles as s } from "../assets/dummyStyles";
-import {useLocation , useNavigate} from "../assets/dummyStyles";
+import { useLocation, useNavigate } from "react-router-dom";
 import {Home,List , Building, Briefcase,UserCheck} from 'lucide-react';
 import logoFallback from '../assets/logo.png';
 
@@ -174,7 +174,7 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
             </div>
 
           </div>
-        </div>
+        </div> 
       </nav>
     </header>
   );
