@@ -171,6 +171,10 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                   </span>
                 )}
               </div>
+              <div className={s.logoTextContainer}>
+                <span className={s.logoBrandName}>{brandName}</span>
+                <span className={s.logoSubtitle}>you will not get Job from here</span>
+              </div>
             </div>
 
           </div>
