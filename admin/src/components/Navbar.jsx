@@ -157,7 +157,7 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
 
             <div
               className={s.logoContainer}
-              onClick={() => handleNavigation("dashboard")}
+              onClick={() => handleNavigate("dashboard")}
             >
               <div className={s.logoWrapper}>
                 {logoToUse ? (
@@ -226,7 +226,7 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                             )
                             return;
                           }
-                          hadleNavigate(item.key);
+                          handleNavigate(item.key);
                         }}
                         className={`${s.navButton} ${
                           isActiveParent
@@ -238,9 +238,76 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                           <span className={s.navButtonText}>
                            {item.label}
                           </span>
+
+                          {item.dropdown && isLGOnly && (
+                            <ChevronDown className={s.navDropdownIcon}/>
+                          )}
                         </button>
                         </div>
+                        {item.dropdown && isLGOnly && (
+                          <div className={`${s.navDropdownPanel} ${
+                            openDropdownKey===item.key
+                            ? s.dropdownVisible
+                            : s.dropdownHidden
+                          }`} 
+                          onMouseEnter={()=>openNavDropdown(item.key)}
+                          onMouseLeave={()=>closeNavDropdownDelayed(200)}
+                          >
+                            <div className={s.dropdownCaret}></div>
+                            <div className={`${s.dropdownContent} ${openDropdownKey===item.key ? "animate-border" : "bg-transparent"}`}
+                            style={{
+                              background :
+                              openDropdownKey===item.key
+                              ? undefined
+                              : "transparent",
+                            }}
+                            >
+                              <div className={s.dropdownInner}>
+                                {item.dropdown.map((sub)=>{
+                                  const isActiveSub=active===sub.key;
+                                  return (
+                                    <button key={sub.key}
+                                      onClick={() => {
+                                        handleNavigate(sub.key);
+                                        closeNavDropdown();
+                                      }}
+                                      className={`${s.navButton} ${
+                                        isActiveSub ? s.navButtonActive : s.navButtonInactive
+                                      }`}
+                                    >
+                                      <span className={s.dropdownItemDot}></span>
+                                      <span>
+                                        {sub.label}
+                                      </span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </li>
+                      {!isLGOnly && item.dropdown 
+                      && item.dropdown.map((sub) => {
+                        const isActiveSub = active === sub.key;
+                        return (
+                          <li key={sub.key} className={s.subNavItem}>
+                            <div ref={(el) => (itemRefs.current[sub.key] = el)} className={s.NavItemWrapper}>
+                              <button
+                                onClick={() => handleNavigate(sub.key)}
+                                className={`${s.subNavButton} ${
+                                  isActiveSub ? s.subNavButtonActive : s.subNavButtonInactive
+                                }`}
+                              >
+                                <span className={s.dropdownItemDot}></span>
+                                <span>
+                                  {sub.label}
+                                </span>
+                              </button>
+                            </div>
+                          </li>
+                        );
+                      })}
                       </React.Fragment>
                      );
 
