@@ -7,7 +7,7 @@ import React ,{
 } from "react";
 import { navbarStyles as s } from "../assets/dummyStyles";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, List, Building, Briefcase, UserCheck, ChevronDown, User, LogIn, LogOut } from "lucide-react";
+import {Home,List , Building, Briefcase,UserCheck} from 'lucide-react';
 import logoFallback from '../assets/logo.png';
 
 const NAV_ITEMS = [
@@ -71,53 +71,6 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
 
   const [openDropdownKey, setOpenDropdownKey] = useState(null);
   const navCloseTimeoutRef = useRef(null);
-  const userMenuContainerRef = useRef(null);
-  const closeTimeoutRef = useRef(null);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-
-  const openNavDropdown = (key) => {
-    if (navCloseTimeoutRef.current) {
-      clearTimeout(navCloseTimeoutRef.current);
-      navCloseTimeoutRef.current = null;
-    }
-    setOpenDropdownKey(key);
-  };
-
-  const closeNavDropdown = () => {
-    if (navCloseTimeoutRef.current) {
-      clearTimeout(navCloseTimeoutRef.current);
-      navCloseTimeoutRef.current = null;
-    }
-    setOpenDropdownKey(null);
-  };
-
-  const closeNavDropdownDelayed = (delay) => () => {
-    if (navCloseTimeoutRef.current) {
-      clearTimeout(navCloseTimeoutRef.current);
-    }
-    navCloseTimeoutRef.current = setTimeout(() => {
-      setOpenDropdownKey(null);
-      navCloseTimeoutRef.current = null;
-    }, delay);
-  };
-
-  const openUserMenu = () => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-      closeTimeoutRef.current = null;
-    }
-    setUserMenuOpen(true);
-  };
-
-  const startCloseTimer = (delay) => () => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-    }
-    closeTimeoutRef.current = setTimeout(() => {
-      setUserMenuOpen(false);
-      closeTimeoutRef.current = null;
-    }, delay);
-  };
 
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200,
@@ -252,9 +205,9 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                         openNavDropdown(item.key)
                       }
                       onMouseLeave={()=>
-                        item.dropdown &&
+                        item.dropdown && 
                         isLGOnly &&
-                        closeNavDropdownDelayed(200)()
+                        closeNavDropdownDelayed(200)
                       }
                       >
                         <div ref={(el)=>{
@@ -298,7 +251,7 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                             : s.dropdownHidden
                           }`} 
                           onMouseEnter={()=>openNavDropdown(item.key)}
-                          onMouseLeave={closeNavDropdownDelayed(200)}
+                          onMouseLeave={()=>closeNavDropdownDelayed(200)}
                           >
                             <div className={s.dropdownCaret}></div>
                             <div className={`${s.dropdownContent} ${openDropdownKey===item.key ? "animate-border" : "bg-transparent"}`}
@@ -371,7 +324,7 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
       <div
         ref={userMenuContainerRef}
         className={s.userMenuContainer}
-        onMouseEnter={openUserMenu}
+        onMouserEnter={openUserMenu}
         onMouseLeave={startCloseTimer(200)}
       >
         <button
@@ -413,7 +366,7 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                 onClick={handleLoout}
                 className={s.logoutButton}
               >
-                <LogOut className={s.logoutIcon} />
+                <logout className={s.logoutIcon} />
                 <span className={s.logoutText}>Logout</span>
               </button>
             </div>
@@ -427,13 +380,17 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
       >
         <span className={s.loginButtonOverlay}>Login</span>
         <span className={s.loginButtonText}>Login</span>
-        <LogIn className={s.loginIcon} />
+        <logIn className={s.loginIcon} />
         <span>Login</span>
       </button>
     )}
   </div>
 </div>
-      </div>
-    </div>
-  </nav>
-</header>
+          </div>
+        </div> 
+      </nav>
+    </header>
+  );
+};
+
+export default Navbar;
