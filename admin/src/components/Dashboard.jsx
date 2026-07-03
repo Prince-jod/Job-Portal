@@ -3,26 +3,26 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   Briefcase,
-  CheckCircle2,
   Users,
-  XCircle,
-  Search,
-  Filter,
   Building2,
   MapPin,
   Sparkles,
   X,
   AlertTriangle,
+  CheckCircle2,
+  XCircle,
+  Filter,
+  Search,
 } from "lucide-react";
 import { dashboardStyles as s, statColors } from "../assets/dummyStyles";
 
-const API_BASE = "http://localhost:5000/api/job/admin/stats";
+const API_BASE = "http://localhost:5000/api";
 
 const STAT_CONFIG = [
   { key: "total", label: "Total Jobs", Icon: Briefcase, color: "blue" },
-  { key: "active", label: "Active Jobs", Icon: CheckCircle2, color: "emerald" },
-  { key: "applicants", label: "Total Applicants", Icon: Users, color: "rose" },
-  { key: "closed", label: "Closed Jobs", Icon: XCircle, color: "amber" },
+  { key: "closed", label: "Closed Jobs", Icon: Briefcase, color: "rose" },
+  { key: "applicants", label: "Total Applicants", Icon: Users, color: "emerald" },
+  { key: "companies", label: "Active Companies", Icon: Building2, color: "amber" },
 ];
 
 const Dashboard = () => {
@@ -32,8 +32,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [companyFilter, setCompanyFilter] = useState("all");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("active");
 
   const [toast, setToast] = useState(null); // { type: 'success' | 'error' | 'confirm', message, onConfirm }
   const [brokenLogos, setBrokenLogos] = useState({});
@@ -63,36 +64,48 @@ const Dashboard = () => {
     }
   };
 
+  const getCompanyName = (job) => job.company?.name ?? job.companyName ?? "Company";
+
   const stats = useMemo(() => {
     const total = jobs.length;
-    const active = jobs.filter((j) => j.status !== "closed").length;
     const closed = jobs.filter((j) => j.status === "closed").length;
     const applicants = jobs.reduce(
       (sum, j) => sum + (j.applicantsCount ?? j.applicants?.length ?? 0),
       0,
     );
-    return { total, active, applicants, closed };
+    const companies = new Set(jobs.map((j) => getCompanyName(j))).size;
+    return { total, closed, applicants, companies };
   }, [jobs]);
+
+  const companyOptions = useMemo(
+    () => [...new Set(jobs.map((j) => getCompanyName(j)))].sort(),
+    [jobs],
+  );
+
+  const roleOptions = useMemo(
+    () => [...new Set(jobs.map((j) => j.role).filter(Boolean))].sort(),
+    [jobs],
+  );
 
   const filteredJobs = useMemo(() => {
     return jobs.filter((job) => {
       const matchesStatus =
         statusFilter === "all" ? true : (job.status ?? "active") === statusFilter;
+      const matchesCompany =
+        companyFilter === "all" ? true : getCompanyName(job) === companyFilter;
+      const matchesRole = roleFilter === "all" ? true : job.role === roleFilter;
 
-      const term = searchTerm.trim().toLowerCase();
-      const matchesSearch =
-        term.length === 0 ||
-        job.role?.toLowerCase().includes(term) ||
-        job.company?.name?.toLowerCase().includes(term) ||
-        job.companyName?.toLowerCase().includes(term);
-
-      return matchesStatus && matchesSearch;
+      return matchesStatus && matchesCompany && matchesRole;
     });
-  }, [jobs, searchTerm, statusFilter]);
+  }, [jobs, companyFilter, roleFilter, statusFilter]);
+
+  const hasActiveFilters =
+    companyFilter !== "all" || roleFilter !== "all" || statusFilter !== "active";
 
   const clearFilters = () => {
-    setSearchTerm("");
-    setStatusFilter("all");
+    setCompanyFilter("all");
+    setRoleFilter("all");
+    setStatusFilter("active");
   };
 
   const handleViewApplicants = (jobId) => {
@@ -102,7 +115,7 @@ const Dashboard = () => {
   const requestCloseJob = (job) => {
     setToast({
       type: "confirm",
-      message: `Close "${job.role}" at ${job.company?.name ?? job.companyName ?? "this company"}?`,
+      message: `Close "${job.role}" at ${getCompanyName(job)}?`,
       onConfirm: () => closeJob(job._id),
     });
   };
@@ -187,7 +200,7 @@ const Dashboard = () => {
             <h1 className={s.headerTitle}>Dashboard</h1>
             <p className={s.headerSubtitle}>
               <Sparkles className={s.headerIcon} />
-              Overview of all jobs and applicants
+              Real-time overview of jobs and applicants
             </p>
           </div>
           <button
@@ -225,7 +238,7 @@ const Dashboard = () => {
               <Filter className={s.filtersIcon} />
               <span className={s.filtersTitle}>Filters</span>
             </div>
-            {(searchTerm || statusFilter !== "all") && (
+            {hasActiveFilters && (
               <button onClick={clearFilters} className={s.filtersClearBtn}>
                 <X className="w-3.5 h-3.5" />
                 Clear filters
@@ -235,31 +248,39 @@ const Dashboard = () => {
 
           <div className={s.filtersGrid}>
             <div className={s.filterInputContainer}>
-              <label className={s.filterLabel}>Search</label>
+              <label className={s.filterLabel}>Filter by Company</label>
               <div className={s.filterInputWrapper}>
                 <Search className={s.filterSearchIcon} />
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search by role or company"
+                <select
+                  value={companyFilter}
+                  onChange={(e) => setCompanyFilter(e.target.value)}
                   className={s.filterSelect}
-                />
+                >
+                  <option value="all">All Companies</option>
+                  {companyOptions.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
             <div className={s.filterInputContainer}>
-              <label className={s.filterLabel}>Status</label>
+              <label className={s.filterLabel}>Filter by Role</label>
               <div className={s.filterInputWrapper}>
-                <Filter className={s.filterSearchIcon} />
+                <Search className={s.filterSearchIcon} />
                 <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
+                  value={roleFilter}
+                  onChange={(e) => setRoleFilter(e.target.value)}
                   className={s.filterSelect}
                 >
-                  <option value="all">All</option>
-                  <option value="active">Active</option>
-                  <option value="closed">Closed</option>
+                  <option value="all">All Roles</option>
+                  {roleOptions.map((role) => (
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -270,10 +291,23 @@ const Dashboard = () => {
         <div className={s.jobsSection}>
           <div className={s.jobsHeader}>
             <h2 className={s.jobsTitle}>
-              <Briefcase className={s.jobsTitleIcon} />
-              Jobs
+              <Building2 className={s.jobsTitleIcon} />
+              Active Roles
             </h2>
-            <span className={s.jobsCount}>{filteredJobs.length} results</span>
+            <div className={s.jobsFilterContainer}>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className={s.jobsStatusSelect}
+              >
+                <option value="active">Active Jobs</option>
+                <option value="closed">Closed Jobs</option>
+                <option value="all">All Jobs</option>
+              </select>
+              <span className={s.jobsCount}>
+                {filteredJobs.length} job{filteredJobs.length === 1 ? "" : "s"}
+              </span>
+            </div>
           </div>
 
           {loading ? (
@@ -302,7 +336,7 @@ const Dashboard = () => {
           ) : (
             <div className={s.jobsGrid}>
               {filteredJobs.map((job) => {
-                const companyName = job.company?.name ?? job.companyName ?? "Company";
+                const companyName = getCompanyName(job);
                 const logoUrl = job.company?.logo ?? job.companyLogo;
                 const showFallback = !logoUrl || brokenLogos[job._id];
                 const isClosed = job.status === "closed";
