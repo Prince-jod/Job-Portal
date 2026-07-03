@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { dashboardStyles as s, statColors } from "../assets/dummyStyles";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "http://localhost:5000/api/job/admin/stats";
 
 const STAT_CONFIG = [
   { key: "total", label: "Total Jobs", Icon: Briefcase, color: "blue" },
