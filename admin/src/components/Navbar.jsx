@@ -299,8 +299,8 @@ const Navbar = ({logoSrc, brandName="Job Portal", onNavigate}) => {
                                   isActiveSub ? s.subNavButtonActive : s.subNavButtonInactive
                                 }`}
                               >
-                                <span className={s.dropdownItemDot}></span>
-                                <span>
+                                <span className={s.subNavDot}></span>
+                                <span className={s.subNavButtonText}>
                                   {sub.label}
                                 </span>
                               </button>
