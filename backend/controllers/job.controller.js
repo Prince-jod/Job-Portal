@@ -83,7 +83,7 @@ export const createJob = async (req, res) => {
 //to get all jobs
 export const getAllJobs = async (req, res) => {
   try{
-    const {roleName,companyName,location,techStack,jobType,category,minSalary,maxSalary,search}=req.query;
+    const {roleName,companyName,location,experience,techStack,jobType,category,minSalary,maxSalary,search}=req.query;
     const query={status:"active"};
  //search by roleName, companyName, or techstack
         if (search) {
