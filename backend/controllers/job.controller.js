@@ -219,7 +219,7 @@ export const getJobsByAdmin = async (req, res) => {
     }
     ]);
     //map the counts for easy lookup
-    const countMap = applicatlionsStats.reduce((acc, curr) => {
+    const countMap = applicationsStats.reduce((acc, curr) => {
       acc[curr._id.toString()] = curr.count;
       return acc;
     }, {});
