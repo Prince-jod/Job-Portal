@@ -53,7 +53,7 @@ const Dashboard = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get(`${API_BASE}/jobs`);
+      const res = await axios.get(`${API_BASE}/job`);
       const data = Array.isArray(res.data) ? res.data : res.data.jobs ?? [];
       setJobs(data);
     } catch (err) {
