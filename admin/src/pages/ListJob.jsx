@@ -6,7 +6,7 @@ const ListJob=()=>{
   return (
     <div> 
       <Navbar/>
-      <ListJobPage/>
+      <ListJobs/>
     </div>
   )
 }
