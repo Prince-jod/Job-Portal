@@ -3,6 +3,7 @@ import Application from "../models/application.model.js";
 import { uploadToCloudinary } from "../utils/cloudinaryUpload.js";
 //create a new job
 export const createJob = async (req, res) => {
+   console.log("CREATE JOB HIT");
   try{
     let {
  roleName,
