@@ -13,7 +13,7 @@ const App=()=>{
           <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login/>} />
           <Route path="/addjobs" element={<AddJobs/>} />
-          <Route path="/listjobs" element={<ListJob/>} />
+          <Route path="/list/jobs" element={<ListJob/>} />
         </Routes>
       </div>
     </div>
