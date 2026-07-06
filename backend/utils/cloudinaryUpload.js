@@ -13,7 +13,9 @@ return new Promise((resolve, reject) => {
     if(resourceType === 'raw'){
       options.public_id = publicId;
     }else{
-      options.public_id = publicId.includes(".") ? publicId.split(".")[0,-1].join(".").join(".") : publicId;
+      options.public_id = publicId.includes(".")
+  ? publicId.split(".").slice(0, -1).join(".")
+  : publicId;
     }
 }
 const uploadStream = cloudinary.uploader.upload_stream(options, (error, result) => {
