@@ -418,7 +418,7 @@ const AddJobsPage = () => {
       formData.append("companyLogo", logoFile);
 
       // Mounted per job.routes.js: jobRouter.post('/', ...) -> POST /api/jobs
-      await api.post("/jobs", formData, {
+      await api.post("/job", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
