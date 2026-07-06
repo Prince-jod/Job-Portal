@@ -9,7 +9,6 @@ import {
   IndianRupee,
   FileText,
   CheckCircle2,
-  XCircle,
   ClipboardList,
   GraduationCap,
   UploadCloud,
@@ -17,13 +16,17 @@ import {
   Plus,
   Trash2,
   Loader2,
+  Award,
+  CalendarDays,
+  Users2,
+  Code2,
 } from "lucide-react";
 import { addJobsPageStyles as s } from "../assets/dummyStyles";
 
 const API_BASE = "http://localhost:5000/api";
 
 // Axios instance that automatically attaches the admin JWT.
-// Your createJob route is protected by authMiddleware + authorize("admin"),
+// createJob is protected by authMiddleware + authorize("admin"),
 // so every request here needs Authorization: Bearer <token>.
 const api = axios.create({ baseURL: API_BASE });
 
@@ -47,6 +50,11 @@ const CATEGORIES = [
   "Finance",
   "Other",
 ];
+
+const JOB_TYPES = ["Full-time", "Part-time", "Internship", "Contract", "Remote"];
+const SALARY_TYPES = ["/month", "/year", "/hour"];
+
+const todayISO = () => new Date().toISOString().slice(0, 10);
 
 /* ---------------- Toast ---------------- */
 const Toast = ({ toast, onClose }) => {
@@ -73,7 +81,7 @@ const Toast = ({ toast, onClose }) => {
   );
 };
 
-/* ---------------- AnimatedField (text / select / textarea) ---------------- */
+/* ---------------- AnimatedField (text / number / date / select / textarea) ---------------- */
 const AnimatedField = ({
   label,
   required,
@@ -154,7 +162,7 @@ const AnimatedField = ({
   );
 };
 
-/* ---------------- ImageUpload (company logo) ---------------- */
+/* ---------------- ImageUpload (company logo - required by schema) ---------------- */
 const ImageUpload = ({ label, required, preview, onFileSelect, onRemove, error }) => {
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef(null);
@@ -202,8 +210,7 @@ const ImageUpload = ({ label, required, preview, onFileSelect, onRemove, error }
           <label htmlFor="logo-upload-input" className={s.uploadPlaceholder}>
             <UploadCloud className={s.uploadIconLarge} />
             <p className={s.uploadText}>
-              Drag & drop an image, or{" "}
-              <span className={s.browseLabel}>browse</span>
+              Drag & drop an image, or <span className={s.browseLabel}>browse</span>
             </p>
           </label>
         )}
@@ -221,7 +228,7 @@ const ImageUpload = ({ label, required, preview, onFileSelect, onRemove, error }
   );
 };
 
-/* ---------------- Array section (Responsibilities / Criteria / Education) ---------------- */
+/* ---------------- Array section (techStack / responsibilities / jobCriteria / education) ---------------- */
 const ArraySection = ({ label, Icon, items, setItems, placeholder }) => {
   const [draft, setDraft] = useState("");
 
@@ -240,7 +247,7 @@ const ArraySection = ({ label, Icon, items, setItems, placeholder }) => {
     <div className={s.arraySection}>
       <label className={s.arrayLabel}>
         <Icon className="w-4 h-4" />
-        {label}
+        {label} <span className={s.requiredStar}>*</span>
       </label>
 
       <div className={s.arrayItemRow}>
@@ -289,17 +296,23 @@ const ArraySection = ({ label, Icon, items, setItems, placeholder }) => {
 const AddJobsPage = () => {
   const navigate = useNavigate();
 
-  const [role, setRole] = useState("");
+  // Fields matching job.model.js exactly
+  const [roleName, setRoleName] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [location, setLocation] = useState("");
+  const [experience, setExperience] = useState("");
+  const [jobType, setJobType] = useState("");
   const [category, setCategory] = useState("");
+  const [openings, setOpenings] = useState("");
+  const [postDate, setPostDate] = useState(todayISO());
   const [overview, setOverview] = useState("");
 
-  const [salaryAmount, setSalaryAmount] = useState("");
-  const [salaryPeriod, setSalaryPeriod] = useState("Yearly");
+  const [salary, setSalary] = useState("");
+  const [salaryType, setSalaryType] = useState("/month");
 
+  const [techStack, setTechStack] = useState([]);
   const [responsibilities, setResponsibilities] = useState([]);
-  const [criteria, setCriteria] = useState([]);
+  const [jobCriteria, setJobCriteria] = useState([]);
   const [education, setEducation] = useState([]);
 
   const [logoFile, setLogoFile] = useState(null);
@@ -334,26 +347,43 @@ const AddJobsPage = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!role.trim()) newErrors.role = "Role is required.";
+    if (!roleName.trim()) newErrors.roleName = "Role name is required.";
     if (!companyName.trim()) newErrors.companyName = "Company name is required.";
     if (!location.trim()) newErrors.location = "Location is required.";
+    if (!experience.trim()) newErrors.experience = "Experience is required.";
+    if (!jobType.trim()) newErrors.jobType = "Job type is required.";
     if (!category.trim()) newErrors.category = "Category is required.";
-    if (!salaryAmount || Number(salaryAmount) <= 0)
-      newErrors.salaryAmount = "Enter a valid salary amount.";
+    if (!openings || Number(openings) <= 0)
+      newErrors.openings = "Enter a valid number of openings.";
+    if (!postDate) newErrors.postDate = "Post date is required.";
+    if (!overview.trim()) newErrors.overview = "Overview is required.";
+    if (!salary || Number(salary) <= 0) newErrors.salary = "Enter a valid salary.";
+    if (!logoFile) newErrors.logo = "Company logo is required.";
+    if (techStack.length === 0) newErrors.techStack = "Add at least one tech stack item.";
+    if (responsibilities.length === 0)
+      newErrors.responsibilities = "Add at least one responsibility.";
+    if (jobCriteria.length === 0) newErrors.jobCriteria = "Add at least one criterion.";
+    if (education.length === 0) newErrors.education = "Add at least one education requirement.";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const resetForm = () => {
-    setRole("");
+    setRoleName("");
     setCompanyName("");
     setLocation("");
+    setExperience("");
+    setJobType("");
     setCategory("");
+    setOpenings("");
+    setPostDate(todayISO());
     setOverview("");
-    setSalaryAmount("");
-    setSalaryPeriod("Yearly");
+    setSalary("");
+    setSalaryType("/month");
+    setTechStack([]);
     setResponsibilities([]);
-    setCriteria([]);
+    setJobCriteria([]);
     setEducation([]);
     setLogoFile(null);
     setLogoPreview(null);
@@ -370,19 +400,24 @@ const AddJobsPage = () => {
     setSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append("role", role.trim());
+      formData.append("roleName", roleName.trim());
       formData.append("companyName", companyName.trim());
       formData.append("location", location.trim());
+      formData.append("experience", experience.trim());
+      formData.append("jobType", jobType);
       formData.append("category", category);
+      formData.append("openings", openings);
+      formData.append("postDate", postDate);
       formData.append("overview", overview.trim());
-      formData.append("salaryAmount", salaryAmount);
-      formData.append("salaryPeriod", salaryPeriod);
+      formData.append("salary", salary);
+      formData.append("salaryType", salaryType);
+      formData.append("techStack", JSON.stringify(techStack));
       formData.append("responsibilities", JSON.stringify(responsibilities));
-      formData.append("criteria", JSON.stringify(criteria));
+      formData.append("jobCriteria", JSON.stringify(jobCriteria));
       formData.append("education", JSON.stringify(education));
-      if (logoFile) formData.append("companyLogo", logoFile);
+      formData.append("companyLogo", logoFile);
 
-      // Mounted per job.routes.js as jobRouter.post('/', ...) -> POST /api/jobs
+      // Mounted per job.routes.js: jobRouter.post('/', ...) -> POST /api/jobs
       await api.post("/jobs", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -400,10 +435,7 @@ const AddJobsPage = () => {
         setToast({ type: "error", message: "Session expired. Please log in again." });
         setTimeout(() => navigate("/login"), 1200);
       } else if (err.response?.status === 403) {
-        setToast({
-          type: "error",
-          message: "You need admin access to post a job.",
-        });
+        setToast({ type: "error", message: "You need admin access to post a job." });
       } else {
         const message =
           err.response?.data?.message ?? "Could not post the job. Please try again.";
@@ -427,17 +459,28 @@ const AddJobsPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} className={s.formCard}>
-          {/* Row 1 */}
+          {/* Row 1: Role / Company / Location */}
           <div className={s.grid3}>
             <div className={s.colSpan1}>
               <AnimatedField
-                label="Role"
+                label="Role Name"
                 required
                 Icon={Briefcase}
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
+                value={roleName}
+                onChange={(e) => setRoleName(e.target.value)}
                 placeholder="e.g. Frontend Developer"
-                error={errors.role}
+                error={errors.roleName}
+              />
+            </div>
+            <div className={s.colSpan1}>
+              <AnimatedField
+                label="Company Name"
+                required
+                Icon={Building2}
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                placeholder="e.g. Infosys"
+                error={errors.companyName}
               />
             </div>
             <div className={s.colSpan1}>
@@ -449,6 +492,33 @@ const AddJobsPage = () => {
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. Bangalore"
                 error={errors.location}
+              />
+            </div>
+          </div>
+
+          {/* Row 2: Experience / Job Type / Category */}
+          <div className={s.grid3}>
+            <div className={s.colSpan1}>
+              <AnimatedField
+                label="Experience"
+                required
+                Icon={Award}
+                value={experience}
+                onChange={(e) => setExperience(e.target.value)}
+                placeholder="e.g. 2-4 years"
+                error={errors.experience}
+              />
+            </div>
+            <div className={s.colSpan1}>
+              <AnimatedField
+                label="Job Type"
+                required
+                as="select"
+                Icon={Briefcase}
+                value={jobType}
+                onChange={(e) => setJobType(e.target.value)}
+                options={JOB_TYPES}
+                error={errors.jobType}
               />
             </div>
             <div className={s.colSpan1}>
@@ -465,67 +535,81 @@ const AddJobsPage = () => {
             </div>
           </div>
 
-          {/* Row 2 */}
-          <div className={s.grid2}>
-            <AnimatedField
-              label="Company Name"
-              required
-              Icon={Building2}
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              placeholder="e.g. Infosys"
-              error={errors.companyName}
-            />
-
-            <div className={s.salaryContainer}>
-              <label className={s.salaryLabel}>
-                Salary <span className={s.requiredStar}>*</span>
-              </label>
-              <div className={s.salaryInputWrapper}>
-                <div
-                  className={`${s.salaryInputGroup} ${
-                    errors.salaryAmount
-                      ? s.salaryInputGroupError
-                      : salaryAmount
-                      ? s.salaryInputGroupFilled
-                      : s.salaryInputGroupDefault
-                  }`}
-                >
-                  <span
-                    className={`${s.salaryIconSpan} ${
-                      salaryAmount ? s.salaryIconFilled : ""
+          {/* Row 3: Openings / Post Date / Salary */}
+          <div className={s.grid3}>
+            <div className={s.colSpan1}>
+              <AnimatedField
+                label="Openings"
+                required
+                type="number"
+                Icon={Users2}
+                value={openings}
+                onChange={(e) => setOpenings(e.target.value)}
+                placeholder="e.g. 3"
+                error={errors.openings}
+              />
+            </div>
+            <div className={s.colSpan1}>
+              <AnimatedField
+                label="Post Date"
+                required
+                type="date"
+                Icon={CalendarDays}
+                value={postDate}
+                onChange={(e) => setPostDate(e.target.value)}
+                error={errors.postDate}
+              />
+            </div>
+            <div className={s.colSpan1}>
+              <div className={s.salaryContainer}>
+                <label className={s.salaryLabel}>
+                  Salary <span className={s.requiredStar}>*</span>
+                </label>
+                <div className={s.salaryInputWrapper}>
+                  <div
+                    className={`${s.salaryInputGroup} ${
+                      errors.salary
+                        ? s.salaryInputGroupError
+                        : salary
+                        ? s.salaryInputGroupFilled
+                        : s.salaryInputGroupDefault
                     }`}
                   >
-                    <IndianRupee className="w-5 h-5" />
-                  </span>
-                  <input
-                    type="number"
-                    min="0"
-                    value={salaryAmount}
-                    onChange={(e) => setSalaryAmount(e.target.value)}
-                    placeholder="e.g. 600000"
-                    className={s.salaryAmountInput}
-                  />
-                  <select
-                    value={salaryPeriod}
-                    onChange={(e) => setSalaryPeriod(e.target.value)}
-                    className={s.salaryPeriodSelect}
-                  >
-                    <option value="Yearly">Yearly</option>
-                    <option value="Monthly">Monthly</option>
-                    <option value="Hourly">Hourly</option>
-                  </select>
+                    <span
+                      className={`${s.salaryIconSpan} ${salary ? s.salaryIconFilled : ""}`}
+                    >
+                      <IndianRupee className="w-5 h-5" />
+                    </span>
+                    <input
+                      type="number"
+                      min="0"
+                      value={salary}
+                      onChange={(e) => setSalary(e.target.value)}
+                      placeholder="e.g. 50000"
+                      className={s.salaryAmountInput}
+                    />
+                    <select
+                      value={salaryType}
+                      onChange={(e) => setSalaryType(e.target.value)}
+                      className={s.salaryPeriodSelect}
+                    >
+                      {SALARY_TYPES.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
+                {errors.salary && <p className={s.errorText}>{errors.salary}</p>}
               </div>
-              {errors.salaryAmount && (
-                <p className={s.errorText}>{errors.salaryAmount}</p>
-              )}
             </div>
           </div>
 
-          {/* Company Logo */}
+          {/* Company Logo (required) */}
           <ImageUpload
             label="Company Logo"
+            required
             preview={logoPreview}
             onFileSelect={handleLogoSelect}
             onRemove={handleLogoRemove}
@@ -536,16 +620,27 @@ const AddJobsPage = () => {
           <div className={s.mdColSpan2}>
             <AnimatedField
               label="Overview"
+              required
               as="textarea"
               Icon={FileText}
               value={overview}
               onChange={(e) => setOverview(e.target.value)}
               placeholder="Brief description of the role..."
               rows={4}
+              error={errors.overview}
             />
           </div>
 
           {/* Array sections */}
+          <ArraySection
+            label="Tech Stack"
+            Icon={Code2}
+            items={techStack}
+            setItems={setTechStack}
+            placeholder="Add a technology and press Enter"
+          />
+          {errors.techStack && <p className={s.errorText}>{errors.techStack}</p>}
+
           <ArraySection
             label="Responsibilities"
             Icon={CheckCircle2}
@@ -553,13 +648,19 @@ const AddJobsPage = () => {
             setItems={setResponsibilities}
             placeholder="Add a responsibility and press Enter"
           />
+          {errors.responsibilities && (
+            <p className={s.errorText}>{errors.responsibilities}</p>
+          )}
+
           <ArraySection
-            label="Criteria"
+            label="Job Criteria"
             Icon={ClipboardList}
-            items={criteria}
-            setItems={setCriteria}
+            items={jobCriteria}
+            setItems={setJobCriteria}
             placeholder="Add a requirement and press Enter"
           />
+          {errors.jobCriteria && <p className={s.errorText}>{errors.jobCriteria}</p>}
+
           <ArraySection
             label="Education"
             Icon={GraduationCap}
@@ -567,6 +668,7 @@ const AddJobsPage = () => {
             setItems={setEducation}
             placeholder="Add an education requirement and press Enter"
           />
+          {errors.education && <p className={s.errorText}>{errors.education}</p>}
 
           <button
             type="submit"
