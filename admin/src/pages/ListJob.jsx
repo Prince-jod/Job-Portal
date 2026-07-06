@@ -1,6 +1,6 @@
 import react from 'react';
 import Navbar from '../components/Navbar'
-import ListJobPage from '../components/ListJobPage'
+import ListJobs from '../components/ListJobs'
 
 const ListJob=()=>{
   return (
