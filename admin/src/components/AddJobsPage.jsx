@@ -22,6 +22,19 @@ import { addJobsPageStyles as s } from "../assets/dummyStyles";
 
 const API_BASE = "http://localhost:5000/api";
 
+// Axios instance that automatically attaches the admin JWT.
+// Your createJob route is protected by authMiddleware + authorize("admin"),
+// so every request here needs Authorization: Bearer <token>.
+const api = axios.create({ baseURL: API_BASE });
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 const CATEGORIES = [
   "Development",
   "Design",
@@ -369,7 +382,8 @@ const AddJobsPage = () => {
       formData.append("education", JSON.stringify(education));
       if (logoFile) formData.append("companyLogo", logoFile);
 
-      await axios.post(`${API_BASE}/jobs`, formData, {
+      // Mounted per job.routes.js as jobRouter.post('/', ...) -> POST /api/jobs
+      await api.post("/jobs", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -381,9 +395,20 @@ const AddJobsPage = () => {
       }, 900);
     } catch (err) {
       console.error("Failed to create job:", err);
-      const message =
-        err.response?.data?.message ?? "Could not post the job. Please try again.";
-      setToast({ type: "error", message });
+
+      if (err.response?.status === 401) {
+        setToast({ type: "error", message: "Session expired. Please log in again." });
+        setTimeout(() => navigate("/login"), 1200);
+      } else if (err.response?.status === 403) {
+        setToast({
+          type: "error",
+          message: "You need admin access to post a job.",
+        });
+      } else {
+        const message =
+          err.response?.data?.message ?? "Could not post the job. Please try again.";
+        setToast({ type: "error", message });
+      }
     } finally {
       setSubmitting(false);
     }
