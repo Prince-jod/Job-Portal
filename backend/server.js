@@ -29,7 +29,7 @@ app.use("/api/auth",authRouter);
 app.use("/api/user",userRouter);
 
 app.use("/api/company",companyRouter);
-app.use("/api/jobs",jobRouter);
+app.use("/api/job",jobRouter);
 app.use("/api/interview",interviewRouter);
 app.use("/api/application",applicationRouter);
 app.use("/api/saved",saveRouter);
