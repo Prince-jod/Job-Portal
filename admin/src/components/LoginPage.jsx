@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff, CheckCircle2, XCircle, X, ArrowRight } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, CheckCircle2, XCircle, X, LogIn } from "lucide-react";
 import { loginPageStyles as s } from "../assets/dummyStyles";
 
 const API_BASE = "http://localhost:5000/api";
@@ -80,14 +80,14 @@ const LoginPage = () => {
 
       <div className={s.card}>
         <div className={s.header}>
-          <h1 className={s.title}>Welcome Back</h1>
-          <p className={s.subtitle}>Login to manage jobs and applicants</p>
+          <h1 className={s.title}>Admin Panel</h1>
+          <p className={s.subtitle}>Job Portal Administration</p>
         </div>
 
         <form onSubmit={handleSubmit} className={s.form}>
           {/* Email */}
           <div className={s.formGroup}>
-            <label className={s.label}>Email</label>
+            <label className={s.label}>Email Address</label>
             <div className={s.inputWrapper}>
               <span className={s.iconWrapper}>
                 <Mail className={s.iconDefault} />
@@ -136,8 +136,8 @@ const LoginPage = () => {
           </div>
 
           <button type="submit" disabled={submitting} className={s.submitBtn}>
+            <LogIn className={`${s.submitIcon} w-4 h-4`} />
             {submitting ? "Signing in..." : "Sign In"}
-            <ArrowRight className={`${s.submitIcon} w-4 h-4`} />
           </button>
         </form>
       </div>

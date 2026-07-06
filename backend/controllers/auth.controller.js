@@ -76,9 +76,13 @@ export const register = async (req, res) => {
 // Login User
 export const login = async (req, res) => {
   try {
+    console.log("Request Body:", req.body);
+
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+
+    console.log("User:", user);
 
     if (!user) {
       return res.status(400).json({
