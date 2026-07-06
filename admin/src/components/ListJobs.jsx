@@ -107,7 +107,7 @@ export default function ListJobs() {
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/job/admin/jobs", {
+      const res = await axios.get("http://localhost:5000/api/jobs/admin/jobs", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.data.success) {
@@ -144,7 +144,7 @@ export default function ListJobs() {
       return;
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.delete(`http://localhost:5000/api/job/${id}`, {
+      const res = await axios.delete(`http://localhost:5000/api/jobs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.data.success) {
