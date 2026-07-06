@@ -3,84 +3,129 @@ import Application from "../models/application.model.js";
 import { uploadToCloudinary } from "../utils/cloudinaryUpload.js";
 //create a new job
 export const createJob = async (req, res) => {
-   console.log("CREATE JOB HIT");
-  try{
+  console.log("=========== CREATE JOB HIT ===========");
+
+  try {
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+    console.log("USER:", req.user);
+
     let {
- roleName,
-            companyName,
-            techStack,
-            location,
-            experience,
-            salary,
-            salaryType,
-            jobType,
-            postDate,
-            category,
-            openings,
-            overview,
-            responsibilities,
-            jobCriteria,
-            education,
-    }=req.body;
-    //handle arrays if sent as strings
-     if (typeof techStack === "string") techStack = JSON.parse(techStack);
-        if (typeof responsibilities === "string") responsibilities = JSON.parse(responsibilities);
-        if (typeof jobCriteria === "string") jobCriteria = JSON.parse(jobCriteria);
-        if (typeof education === "string") education = JSON.parse(education);
+      roleName,
+      companyName,
+      techStack,
+      location,
+      experience,
+      salary,
+      salaryType,
+      jobType,
+      postDate,
+      category,
+      openings,
+      overview,
+      responsibilities,
+      jobCriteria,
+      education,
+    } = req.body;
 
-        let postDateValue;
-        if (postDate) {
-            if (typeof postDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(postDate)) {
-                const [year, month, day] = postDate.split("-");
-                postDateValue = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
-            } else {
-                postDateValue = new Date(postDate);
-            }
-            if (isNaN(postDateValue.getTime())) {
-                postDateValue = new Date();
-            }
-        } else {
-            postDateValue = new Date();
-        }
+    console.log("✅ After destructuring");
 
-        let companyLogo = "";
-        if (req.file) {
-            const uploadRes = await uploadToCloudinary(req.file.buffer, "jobportal/logos", "image", req.file.originalname);
-            companyLogo = uploadRes.secure_url;
-        }
-        const job = await Job({
-        companyLogo,
-        roleName,
-        companyName,
-        techStack,
-        location,
-        experience,
-        salary,
-        salaryType,
-        jobType,
-        postDate: postDateValue,
-        createdBy: req.user.id,
-        category,
-        openings,
-        overview,
-        responsibilities,
-        jobCriteria,
-        education
-        });
-        await job.save();
-        res.status(201).json({
-            success: true,
-            message: "Job created successfully",
-            job
-        });
-  }
-  catch(error){
-    res.status(500).json({
+    // Parse JSON strings
+    if (typeof techStack === "string") techStack = JSON.parse(techStack);
+    if (typeof responsibilities === "string") responsibilities = JSON.parse(responsibilities);
+    if (typeof jobCriteria === "string") jobCriteria = JSON.parse(jobCriteria);
+    if (typeof education === "string") education = JSON.parse(education);
+
+    console.log("✅ Arrays parsed");
+
+    // Handle post date
+    let postDateValue;
+
+    if (postDate) {
+      if (
+        typeof postDate === "string" &&
+        /^\d{4}-\d{2}-\d{2}$/.test(postDate)
+      ) {
+        const [year, month, day] = postDate.split("-");
+        postDateValue = new Date(
+          Date.UTC(Number(year), Number(month) - 1, Number(day))
+        );
+      } else {
+        postDateValue = new Date(postDate);
+      }
+
+      if (isNaN(postDateValue.getTime())) {
+        postDateValue = new Date();
+      }
+    } else {
+      postDateValue = new Date();
+    }
+
+    console.log("✅ Date parsed");
+
+    let companyLogo = "";
+
+    if (req.file) {
+      console.log("⬆️ Uploading image to Cloudinary...");
+
+      const uploadRes = await uploadToCloudinary(
+        req.file.buffer,
+        "jobportal/logos",
+        "image",
+        req.file.originalname
+      );
+
+      console.log("✅ Cloudinary Response:", uploadRes);
+
+      companyLogo = uploadRes.secure_url;
+    } else {
+      console.log("❌ No file received");
+    }
+
+    console.log("✅ Creating Job document");
+
+    const job = new Job({
+      companyLogo,
+      roleName,
+      companyName,
+      techStack,
+      location,
+      experience,
+      salary,
+      salaryType,
+      jobType,
+      postDate: postDateValue,
+      createdBy: req.user.id,
+      category,
+      openings,
+      overview,
+      responsibilities,
+      jobCriteria,
+      education,
+    });
+
+    console.log("✅ Saving job to MongoDB...");
+
+    await job.save();
+
+    console.log("🎉 Job saved successfully");
+
+    return res.status(201).json({
+      success: true,
+      message: "Job created successfully",
+      job,
+    });
+  } catch (error) {
+    console.error("========== CREATE JOB ERROR ==========");
+    console.error(error);
+    console.error(error.stack);
+
+    return res.status(500).json({
       success: false,
-      message: error.message || "server error"
+      message: error.message,
     });
   }
-}
+};
 //to get all jobs
 export const getAllJobs = async (req, res) => {
   try{
