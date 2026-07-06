@@ -1,6 +1,6 @@
 import cloudinary from '../config/cloudinary.js';
 export const uploadToCloudinary = async (fileBuffer, folderName,resourceType = 'auto',publicId=null) => {
-return new promise((resolve, reject) => {
+return new Promise((resolve, reject) => {
   const options = {
     folder: folderName,
     resource_type: resourceType,
