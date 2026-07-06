@@ -1,6 +1,6 @@
 import Job from "../models/job.model.js";
 import Application from "../models/application.model.js";
-// import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 //create a new job
 export const createJob = async (req, res) => {
   try{
