@@ -225,7 +225,7 @@ export default function ListJobs() {
       }
 
       const res = await axios.put(
-        `http://localhost:5000/api/job/${editingJob.id}`,
+        `http://localhost:5000/api/jobs/${editingJob.id}`,
         formDataToSend,
         {
           headers: {
