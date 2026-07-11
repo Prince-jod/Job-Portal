@@ -248,7 +248,7 @@ export const getDashboardStats = async (req, res) => {
 
 export const getJobsByAdmin = async (req, res) => {
   try {
-    const jobs = await job.find().sort({ createdAt: -1 });
+    const jobs = await Job.find().sort({ createdAt: -1 });
     const  applicaltionsStats = await Application.aggregate([
       {
         $lookup: {
