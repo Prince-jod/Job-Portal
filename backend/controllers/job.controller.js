@@ -252,7 +252,7 @@ export const getJobsByAdmin = async (req, res) => {
     const  applicaltionsStats = await Application.aggregate([
       {
         $lookup: {
-          frnom: "users",
+          from: "users",
           localField: "userId",
           foreignField: "_id",
           as: "userRecord"
