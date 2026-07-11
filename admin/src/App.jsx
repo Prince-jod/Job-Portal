@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import AddJobs from "./pages/AddJobs";
 import ListJob from "./pages/ListJob";
 import CompanyPage from "./pages/CompanyPage";
+import CompanyQuestionsPage from "./components/CompanyQuestionsPage";
 const App=()=>{
   return (
     
