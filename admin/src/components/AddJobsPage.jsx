@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { addJobsPageStyles as s } from "../assets/dummyStyles";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "http://localhost:5000/api/";
 
 // Axios instance that automatically attaches the admin JWT.
 // createJob is protected by authMiddleware + authorize("admin"),
@@ -418,7 +418,7 @@ const AddJobsPage = () => {
       formData.append("companyLogo", logoFile);
 
       // Mounted per job.routes.js: jobRouter.post('/', ...) -> POST /api/jobs
-      await api.post("/job", formData, {
+      await api.post("/jobs", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
