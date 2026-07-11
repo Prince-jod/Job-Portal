@@ -107,7 +107,7 @@ export default function ListJobs() {
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/jobs/admin/jobs", {
+      const res = await axios.get("http://localhost:5000/api/jobs/admin", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.data.success) {
