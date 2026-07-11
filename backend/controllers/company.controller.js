@@ -1,5 +1,5 @@
 import Company from "../models/company.model.js";
-
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 //to get all companies
 export const getCompanies = async (req, res) => {
   try {
