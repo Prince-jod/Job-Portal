@@ -249,23 +249,14 @@ export const getDashboardStats = async (req, res) => {
 export const getJobsByAdmin = async (req, res) => {
   try {
     const jobs = await Job.find().sort({ createdAt: -1 });
-    const  applicaltionsStats = await Application.aggregate([
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "userRecord"
-        }
-      },
-      {$unwind: "$userRecord"},
-      {
-        $group: {
-          _id: "$job",
-          count: { $sum: 1 },
-      }
-    }
-    ]);
+    const applicationsStats = await Application.aggregate([
+  {
+    $group: {
+      _id: "$job",
+      count: { $sum: 1 },
+    },
+  },
+]);
     //map the counts for easy lookup
     const countMap = applicationsStats.reduce((acc, curr) => {
       acc[curr._id.toString()] = curr.count;
