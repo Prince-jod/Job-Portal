@@ -26,7 +26,7 @@ message:"Required fields missing"
             csvFile: { folder: "jobportal/csv", type: "raw" }
     });
     const company=await InterviewCompany.create({
-      copmanyName,
+      companyName,
       logo: upload.logoFile ||"",
       questionsCount,
       csvFileUrl:uploads.csvFile ||"",
