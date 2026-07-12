@@ -25,7 +25,7 @@ interviewRouter.delete('/role/:roleId',authMiddleware,authorize("admin"),deleteI
 interviewRouter.get('/companies',getInterviewCompanies);
 interviewRouter.get('/company/:companyId',getInterviewQuestionByCompany);
 interviewRouter.post('/',authMiddleware,authorize("admin"),upload.fields([
-    {name : "logFile",maxCount:1},
+    {name : "logoFile",maxCount:1},
   {name:"csvFile",maxCount:1}
 ]),addInterviewCompany);
 interviewRouter.put('/:companyId',authMiddleware,authorize("admin"),upload.fields([
