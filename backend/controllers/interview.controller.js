@@ -34,7 +34,7 @@ message:"Required fields missing"
     });
     if(questionsData){
       const formatted=parseQuestions(
-        questionData,
+        questionsData,
         "company",
         company._id,
         req.user.id
@@ -168,7 +168,7 @@ export const addInterviewRole=async(req,res)=>{
       });
       if(questionsData){
         const formatted=parseQuestions(
-          questionData,
+          questionsData,
           "role",
           role._id,
           req.user.id
