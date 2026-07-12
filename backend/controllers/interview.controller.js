@@ -27,7 +27,7 @@ message:"Required fields missing"
     });
     const company=await InterviewCompany.create({
       companyName,
-      logo: upload.logoFile ||"",
+      logo: uploads.logoFile ||"",
       questionsCount,
       csvFileUrl:uploads.csvFile ||"",
       createdBy:req.user.id
