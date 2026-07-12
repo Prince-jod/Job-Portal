@@ -93,7 +93,7 @@ export const updateInterviewCompany = async (req, res) => {
         if (questionsCount) company.questionsCount = questionsCount;
 
         const uploads = await uploadFiles(req.files, {
-            logoFile: { folder: "jobportal/logos", type: "image" },
+            logFile: { folder: "jobportal/logos", type: "image" },
             csvFile: { folder: "jobportal/csv", type: "raw" }
         });
 
