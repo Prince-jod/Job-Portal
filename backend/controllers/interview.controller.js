@@ -9,7 +9,7 @@ import {handleError, parseQuestions, uploadFiles} from "../utils/helpers.js"
 //add to a company interview question
 export const addInterviewCompany=async(req,res)=>{
   try{
-    const { companyName, questionsCount,questionData}=req.body;
+    const { companyName, questionsCount,questionsData}=req.body;
     if(!companyName || !questionsCount){
       return res.status(400).json({
 message:"Required fields missing"
