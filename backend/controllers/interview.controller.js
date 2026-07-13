@@ -4,7 +4,7 @@ import InterviewRole from "../models/interviewRole.model.js";
 import RoleQuestion from "../models/roleQuestion.model.js";
 // import {uploadFiles} from "../utils/helpers.js";
 import roleQuestionModel from "../models/roleQuestion.model.js";
-import {handleError, parseQuestions, uploadsFiles} from "../utils/helpers.js"
+import {handleError, parseQuestions, uploadFiles} from "../utils/helpers.js"
 //interview Questions
 //add to a company interview question
 export const addInterviewCompany=async(req,res)=>{
