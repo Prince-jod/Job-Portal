@@ -21,7 +21,7 @@ message:"Required fields missing"
         message: "Company already exists"
       });
     }
-    const uploads=await uploadsFiles(req.files,{
+    const uploads=await uploadFiles(req.files,{
        logoFile: { folder: "jobportal/logos", type: "image" },
             csvFile: { folder: "jobportal/csv", type: "raw" }
     });
@@ -92,7 +92,7 @@ export const updateInterviewCompany = async (req, res) => {
         if (companyName) company.companyName = companyName;
         if (questionsCount) company.questionsCount = questionsCount;
 
-        const uploads = await uploadsFiles(req.files, {
+        const uploads = await uploadFiles(req.files, {
             logFile: { folder: "jobportal/logos", type: "image" },
             csvFile: { folder: "jobportal/csv", type: "raw" }
         });
@@ -154,7 +154,7 @@ export const addInterviewRole=async(req,res)=>{
         message:"role already exists"
       });
     }
-    const uploads=await uploadsFiles(
+    const uploads=await uploadFiles(
       req.files,{
         imageFile: { folder: "jobportal/roles", type: "image" },
             csvFile: { folder: "jobportal/csv", type: "raw" }
@@ -236,7 +236,7 @@ export const updateInterviewRole = async (req, res) => {
         if (roleName) role.roleName = roleName;
         if (questionsCount) role.questionsCount = questionsCount;
 
-        const uploads = await uploadsFiles(req.files, {
+        const uploads = await uploadFiles(req.files, {
             imageFile: { folder: "jobportal/roles", type: "image" },
             csvFile: { folder: "jobportal/csv", type: "raw" }
         });
