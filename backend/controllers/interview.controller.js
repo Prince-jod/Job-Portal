@@ -154,7 +154,7 @@ export const addInterviewRole=async(req,res)=>{
         message:"role already exists"
       });
     }
-    const uploads=await uploadFiles(
+    const uploads=await uploadsFiles(
       req.files,{
         imageFile: { folder: "jobportal/roles", type: "image" },
             csvFile: { folder: "jobportal/csv", type: "raw" }
@@ -163,7 +163,7 @@ export const addInterviewRole=async(req,res)=>{
         roleName,
         image:uploads.imageFile || "",
         questionsCount,
-        csvFileUrl: upload.csvFile ||"",
+        csvFileUrl: uploads.csvFile ||"",
         createdBy: req.user.id
       });
       if(questionsData){
@@ -236,7 +236,7 @@ export const updateInterviewRole = async (req, res) => {
         if (roleName) role.roleName = roleName;
         if (questionsCount) role.questionsCount = questionsCount;
 
-        const uploads = await uploadFiles(req.files, {
+        const uploads = await uploadsFiles(req.files, {
             imageFile: { folder: "jobportal/roles", type: "image" },
             csvFile: { folder: "jobportal/csv", type: "raw" }
         });
