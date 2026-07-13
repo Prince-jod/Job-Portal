@@ -161,7 +161,7 @@ export const addInterviewRole=async(req,res)=>{
       })
       const role=await InterviewRole.create({
         roleName,
-        image:upload.imageFile || "",
+        image:uploads.imageFile || "",
         questionsCount,
         csvFileUrl: upload.csvFile ||"",
         createdBy: req.user.id
