@@ -11,3 +11,4 @@ const ListCompanyQs = () => {
     </div>
   );
 }
+export default ListCompanyQs;
