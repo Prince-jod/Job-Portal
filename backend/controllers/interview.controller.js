@@ -214,7 +214,7 @@ export const getQuestionsByRole = async(req,res)=>{
     const {roleId}=req.params;
     const [role, questions ] = await Promise.all([
       InterviewRole.findById(roleId),
-      RoleQuestion.find({role: roleId}).sort({createdAt:-1})
+      RoleQuestion.find({ roleId}).sort({createdAt:-1})
     ]);
     res.status(200).json({
       success: true,
@@ -277,7 +277,7 @@ export const deleteInterviewRole=async(req,res)=>{
   try{
     const {roleId}=req.params;
     await InterviewRole.findByIdAndDelete(roleId);
-    await RoleQuestion.deleteMany({role: roleId});
+    await RoleQuestion.deleteMany({roleId});
     res.status(200).json({
       success:true,
       message:"role deleted successfully"
