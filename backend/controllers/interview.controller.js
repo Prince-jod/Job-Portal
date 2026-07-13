@@ -21,7 +21,7 @@ message:"Required fields missing"
         message: "Company already exists"
       });
     }
-    const uploads=await uploadFiles(req.files,{
+    const uploads=await uploadsFiles(req.files,{
        logoFile: { folder: "jobportal/logos", type: "image" },
             csvFile: { folder: "jobportal/csv", type: "raw" }
     });
