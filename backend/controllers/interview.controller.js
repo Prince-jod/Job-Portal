@@ -277,7 +277,7 @@ export const deleteInterviewRole=async(req,res)=>{
   try{
     const {roleId}=req.params;
     await InterviewRole.findByIdAndDelete(roleId);
-    await RoleQuestion.deleteMany({roleId});
+    await RoleQuestion.deleteMany({role: roleId});
     res.status(200).json({
       success:true,
       message:"role deleted successfully"
