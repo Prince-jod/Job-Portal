@@ -387,8 +387,9 @@ const RoleQuestionPage = () => {
       formDataToSend.append("questionsCount", totalQuestions);
       formDataToSend.append("imageFile", imageFile);
       formDataToSend.append("csvFile", csvFile);
-      formDataToSend.append("csvFileName", csvFile.name);
-      formDataToSend.append("questionsData", JSON.stringify(questions));
+      // Note: the backend parses csvFile itself to create individual
+      // RoleQuestion documents, so we don't send pre-parsed question data —
+      // the preview below is a client-side sanity check only.
 
       // Mounted per interview.routes.js: interviewRouter.post('/role', ...) -> POST /api/interview/role
       await api.post("/interview/role", formDataToSend, {
@@ -554,7 +555,12 @@ const RoleQuestionPage = () => {
         {/* Parsed questions preview */}
         {questions.length > 0 && (
           <div className={s.questionsSection}>
-            <h2 className={s.sectionTitle}>Parsed Questions</h2>
+            <h2 className={s.sectionTitle}>Parsed Questions (Preview Only)</h2>
+            <p className="text-xs text-slate-400 -mt-2 mb-4">
+              This is a local preview to help you sanity-check the CSV before
+              uploading. Your server parses the file itself and creates the
+              actual question records.
+            </p>
 
             <div className={s.questionsGrid}>
               {questions.map((q, idx) => (
