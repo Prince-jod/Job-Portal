@@ -239,7 +239,7 @@ export const updateInterviewRole = async (req, res) => {
         }
 
         if (roleName) role.roleName = roleName;
-        if (questionsCount) role.questionsCount = questionsCount;
+        if (questionsCount) role.questionCount = questionsCount;
 
         const uploads = await uploadFiles(req.files, {
             imageFile: { folder: "jobportal/roles", type: "image" },
