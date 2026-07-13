@@ -8,6 +8,7 @@ import CompanyPage from "./pages/CompanyPage";
 import CompanyQuestionsPage from "./components/CompanyQuestionsPage";
 import ListCompanyQs from "./pages/ListCompanyQs";
 import RoleQuestion from "./pages/RoleQuestion";
+import ListRoleQs from "./pages/ListRoleQs";
 const App=()=>{
   return (
     
