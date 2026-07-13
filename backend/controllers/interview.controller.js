@@ -53,7 +53,7 @@ export const getInterviewCompanies=async(req,res)=>{
     const companies=await InterviewCompany.find().sort({createdAt:-1});
     res.status(200).json({
       success:true,
-      compaines
+      companies
     });
   }
   catch(err){
