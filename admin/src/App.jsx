@@ -7,6 +7,7 @@ import ListJob from "./pages/ListJob";
 import CompanyPage from "./pages/CompanyPage";
 import CompanyQuestionsPage from "./components/CompanyQuestionsPage";
 import ListCompanyQs from "./pages/ListCompanyQs";
+import RoleQuestion from "./pages/RoleQuestion";
 const App=()=>{
   return (
     
@@ -18,7 +19,9 @@ const App=()=>{
           <Route path="/addjobs" element={<AddJobs/>} />
           <Route path="/companies" element={<CompanyPage/>} />
            <Route path="/company-questions" element={<CompanyQuestionsPage/>} />
+         
          <Route path="/list/company-questions" element={<ListCompanyQs/>} />
+         <Router path="/role-questions" element={<RoleQuestion/>} />
           <Route path="/list/jobs" element={<ListJob/>} />
         </Routes>
       </div>
