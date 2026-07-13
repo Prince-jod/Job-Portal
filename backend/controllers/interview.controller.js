@@ -213,8 +213,8 @@ export const getQuestionsByRole = async(req,res)=>{
   try {
     const {roleId}=req.params;
     const [role, questions ] = await Promise.all([
-      InterwievRole.findById(roleId),
-      RoleQuestion.find({roleId}).sort({ceeatedAt:-1})
+      InterviewRole.findById(roleId),
+      RoleQuestion.find({roleId}).sort({createdAt:-1})
     ]);
     res.status(200).json({
       success: true,
