@@ -19,7 +19,7 @@ const App=()=>{
           <Route path="/addjobs" element={<AddJobs/>} />
           <Route path="/companies" element={<CompanyPage/>} />
            <Route path="/company-questions" element={<CompanyQuestionsPage/>} />
-         
+         <Router path="/list/role-questions" element={<ListRoleQs/>} />
          <Route path="/list/company-questions" element={<ListCompanyQs/>} />
          <Route path="/role-questions" element={<RoleQuestion/>} />
           <Route path="/list/jobs" element={<ListJob/>} />
