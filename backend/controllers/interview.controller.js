@@ -159,13 +159,13 @@ export const addInterviewRole=async(req,res)=>{
         imageFile: { folder: "jobportal/roles", type: "image" },
             csvFile: { folder: "jobportal/csv", type: "raw" }
       })
-      const role=await InterviewRole.create({
-        roleName,
-        image:uploads.imageFile || "",
-        questionsCount,
-        csvFileUrl: uploads.csvFile ||"",
-        createdBy: req.user.id
-      });
+      const role = await InterviewRole.create({
+  roleName,
+  image: uploads.imageFile || "",
+  questionCount: questionsCount,
+  csvFileUrl: uploads.csvFile || "",
+  CreatedBy: req.user.id
+});
       if(questionsData){
         const formatted=parseQuestions(
           questionsData,
