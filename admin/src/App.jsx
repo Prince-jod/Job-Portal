@@ -24,6 +24,7 @@ const App=()=>{
          <Route path="/list/company-questions" element={<ListCompanyQs/>} />
          <Route path="/role-questions" element={<RoleQuestion/>} />
          <Route path="/list/role-questions" element={<ListRoleQs/>} />
+         <Route path="/applicants" element={<ApplicantsPage/>} />
           <Route path="/list/jobs" element={<ListJob/>} />
         </Routes>
       </div>
