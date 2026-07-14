@@ -27,7 +27,7 @@ const App=()=>{
          <Route path="/list/role-questions" element={<ListRoleQs/>} />
 <Route
   path="/view-applicants/:jobId"
-  element={<ViewApplicantsPage />}
+  element={<ApplicantsPage />}
 />          <Route path="/list/jobs" element={<ListJob/>} />
         </Routes>
       </div>
